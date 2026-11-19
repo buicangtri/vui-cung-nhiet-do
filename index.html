@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vui Cùng Nhiệt Độ – Bộ Bài Nhiệt Học Nghệ Thuật</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #0b101b;
+      --bg-surface: #121a2b;
+      --panel-bg: rgba(19, 28, 46, 0.72);
+      --panel-border: rgba(226, 192, 141, 0.22);
+      --panel-border-subtle: rgba(148, 179, 214, 0.16);
+      --gold: #e2c08d;
+      --gold-soft: rgba(226, 192, 141, 0.16);
+      --frost: #7dd3fc;
+      --frost-soft: rgba(125, 211, 252, 0.15);
+      --emerald: #34d399;
+      --amber: #fbbf24;
+      --rose: #fb7185;
+      --text-main: #f4f6fa;
+      --text-muted: #93a4be;
+      --card-width: 152px;
+      --card-height: 208px;
+      --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-base);
+      background-image:
+        radial-gradient(circle at 15% 18%, rgba(56, 189, 248, 0.12) 0%, transparent 42%),
+        radial-gradient(circle at 85% 22%, rgba(226, 192, 141, 0.10) 0%, transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(129, 140, 248, 0.10) 0%, transparent 50%),
+        linear-gradient(160deg, #0a0f1a 0%, #111929 55%, #0d1524 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Subtle tactile grain overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      z-index: 0;
+    }
+
+    /* Header */
+    header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 28px;
+      background: rgba(11, 16, 27, 0.78);
+      border-bottom: 1px solid var(--panel-border);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-emblem {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--panel-border);
+      background: linear-gradient(135deg, rgba(226, 192, 141, 0.15), rgba(125, 211, 252, 0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .title-group h1 {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      color: #f8fafc;
+    }
+
+    .title-group h1 span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .title-group p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      letter-spacing: 0.2px;
+    }
+
+    .title-group p strong {
+      color: var(--frost);
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-ref {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--gold);
+      border: 1px solid var(--panel-border);
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.22s ease;
+    }
+
+    .btn-ref:hover {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    /* Main Layout */
+    .game-container {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      gap: 22px;
+      padding: 18px 28px;
+      max-width: 1460px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .board-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .board-row {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border-subtle);
+      border-radius: 18px;
+      padding: 12px 20px 14px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+
+    .board-row.row-match {
+      border-color: var(--panel-border);
+      background: linear-gradient(180deg, rgba(22, 33, 54, 0.78) 0%, rgba(16, 24, 41, 0.82) 100%);
+    }
+
+    .row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .row-title {
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.1px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .row-roman {
+      font-family: var(--font-serif);
+      color: var(--gold);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .badge-tag {
+      font-size: 0.73rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(226, 192, 141, 0.12);
+      border: 1px solid rgba(226, 192, 141, 0.28);
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: none;
+    }
+
+    .row-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      justify-items: center;
+      align-items: center;
+      min-height: calc(var(--card-height) + 10px);
+    }
+
+    /* Slots */
+    .slot {
+      width: var(--card-width);
+      height: var(--card-height);
+      border-radius: 16px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .drop-slot {
+      border: 1.5px dashed rgba(226, 192, 141, 0.35);
+      background: rgba(11, 16, 27, 0.42);
+      cursor: pointer;
+    }
+
+    .drop-slot::after {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: 11px;
+      border: 1px solid rgba(226, 192, 141, 0.08);
+      pointer-events: none;
+    }
+
+    .drop-slot:hover {
+      border-color: var(--gold);
+      background: rgba(226, 192, 141, 0.06);
+    }
+
+    .drop-slot.drag-over {
+      border-style: solid;
+      border-color: var(--frost);
+      background: rgba(125, 211, 252, 0.12);
+      transform: scale(1.04);
+      box-shadow: 0 0 24px rgba(125, 211, 252, 0.22);
+    }
+
+    .slot-placeholder {
+      text-align: center;
+      color: var(--text-muted);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .slot-placeholder span {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: rgba(226, 192, 141, 0.65);
+      letter-spacing: 1px;
+    }
+
+    .slot-placeholder small {
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+
+    .hand-slot {
+      border: 1px solid rgba(148, 179, 214, 0.14);
+      background: rgba(11, 16, 27, 0.32);
+    }
+
+    /* 3D Playing Card */
+    .card {
+      width: 100%;
+      height: 100%;
+      perspective: 1100px;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
+    }
+
+    /* Artistic Card Back (Deep Navy Velvet + Champagne Gold Astrolabe/Snowflake Filigree) */
+    .card-back {
+      background: radial-gradient(circle at 50% 35%, #1e2d4a 0%, #101829 75%, #0b111e 100%);
+      border: 1.5px solid rgba(226, 192, 141, 0.55);
+      color: var(--gold);
+      padding: 8px;
+    }
+
+    .card-back-frame {
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(226, 192, 141, 0.28);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background-image: radial-gradient(rgba(226, 192, 141, 0.12) 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+
+    .card-back-frame svg {
+      width: 72px;
+      height: 72px;
+      opacity: 0.88;
+      filter: drop-shadow(0 2px 8px rgba(226, 192, 141, 0.25));
+    }
+
+    .card-back-label {
+      margin-top: 8px;
+      font-family: var(--font-serif);
+      font-size: 0.68rem;
+      letter-spacing: 2.2px;
+      text-transform: uppercase;
+      color: rgba(226, 192, 141, 0.78);
+    }
+
+    /* Artistic Card Front (Tactile Matte Ivory / Frost Stock + Fine-Line Botanical/Cryo Illustration) */
+    .card-front {
+      background: linear-gradient(165deg, #fcfbf9 0%, #f3f5f8 60%, #e9eef5 100%);
+      border: 1.5px solid #cbd5e1;
+      color: #131c2e;
+      transform: rotateY(180deg);
+      padding: 9px;
+    }
+
+    .card-front-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      padding: 8px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.9) 0%, transparent 75%);
+    }
+
+    .card.student-card .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card.student-card {
+      cursor: grab;
+    }
+
+    .card.student-card:hover .card-front {
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45), 0 0 0 2px rgba(226, 192, 141, 0.65);
+    }
+
+    .card.student-card:active {
+      cursor: grabbing;
+    }
+
+    .card.selected .card-front {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(226, 192, 141, 0.55), 0 16px 30px rgba(0, 0, 0, 0.5);
+      transform: rotateY(180deg) translateY(-7px);
+    }
+
+    .card-header-meta {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    .card-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .card-art {
+      width: 82px;
+      height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 2px 0;
+    }
+
+    .card-art svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .card-title-wrap {
+      width: 100%;
+      text-align: center;
+    }
+
+    .card-name {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.22;
+    }
+
+    .card-ornament {
+      width: 44px;
+      height: 2px;
+      margin: 6px auto 0;
+      border-radius: 2px;
+      opacity: 0.85;
+    }
+
+    /* Subtle Editorial Color Accents per Substance (NO temperature clues) */
+    .theme-pure .card-front { border-color: #7dd3fc; }
+    .theme-pure .card-dot, .theme-pure .card-ornament { background: #0284c7; }
+    .theme-pure .card-art { color: #0284c7; }
+
+    .theme-milk .card-front { border-color: #e2c08d; }
+    .theme-milk .card-dot, .theme-milk .card-ornament { background: #b45309; }
+    .theme-milk .card-art { color: #b45309; }
+
+    .theme-sea .card-front { border-color: #2dd4bf; }
+    .theme-sea .card-dot, .theme-sea .card-ornament { background: #0f766e; }
+    .theme-sea .card-art { color: #0f766e; }
+
+    .theme-salt5 .card-front { border-color: #818cf8; }
+    .theme-salt5 .card-dot, .theme-salt5 .card-ornament { background: #4338ca; }
+    .theme-salt5 .card-art { color: #4338ca; }
+
+    .theme-salt10 .card-front { border-color: #c084fc; }
+    .theme-salt10 .card-dot, .theme-salt10 .card-ornament { background: #7e22ce; }
+    .theme-salt10 .card-art { color: #7e22ce; }
+
+    /* Shuffle Animations */
+    @keyframes shuffleLeft {
+      0% { transform: translateX(0) rotate(0deg); }
+      25% { transform: translateX(46px) rotate(5deg); }
+      50% { transform: translateX(-34px) rotate(-4deg); }
+      75% { transform: translateX(22px) rotate(2.5deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    @keyframes shuffleRight {
+      0% { transform: translateX(0) rotate(0deg); }
+      25% { transform: translateX(-46px) rotate(-5deg); }
+      50% { transform: translateX(34px) rotate(4deg); }
+      75% { transform: translateX(-22px) rotate(-2.5deg); }
+      100% { transform: translateX(0) rotate(0deg); }
+    }
+
+    .shuffling-even { animation: shuffleLeft 0.75s cubic-bezier(0.36, 0, 0.66, -0.56); }
+    .shuffling-odd { animation: shuffleRight 0.75s cubic-bezier(0.36, 0, 0.66, -0.56); }
+
+    /* Scoring Badges & Temperature Pills (Revealed ONLY during Test) */
+    .match-result-badge {
+      position: absolute;
+      bottom: -13px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.85);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+      z-index: 25;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .match-result-badge.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .res-win { background: #059669; color: #ecfdf5; border: 1.5px solid #6ee7b7; }
+    .res-draw { background: #d97706; color: #fffbeb; border: 1.5px solid #fcd34d; }
+    .res-lose { background: #e11d48; color: #fff1f2; border: 1.5px solid #fda4af; }
+
+    .temp-reveal-pill {
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: var(--gold);
+      border: 1px solid var(--gold);
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 2px 10px;
+      border-radius: 999px;
+      z-index: 25;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
+    }
+
+    .active-testing-col {
+      box-shadow: 0 0 0 2px var(--gold), 0 0 28px rgba(226, 192, 141, 0.35);
+      border-radius: 16px;
+    }
+
+    /* Right Control Sidebar */
+    .control-sidebar {
+      width: 280px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 18px;
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(10px);
+    }
+
+    .control-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .control-title {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      color: var(--gold);
+      text-align: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .ctrl-btn {
+      width: 100%;
+      padding: 14px 14px;
+      border-radius: 14px;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      transition: all 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ctrl-btn span.btn-sub {
+      font-size: 0.73rem;
+      font-weight: 500;
+      opacity: 0.85;
+    }
+
+    .ctrl-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+    }
+
+    .ctrl-btn:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .ctrl-btn:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    .btn-shuffle {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #f8fafc;
+      border: 1px solid rgba(125, 211, 252, 0.45);
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.18);
+    }
+    .btn-shuffle:hover:not(:disabled) {
+      border-color: var(--frost);
+      box-shadow: 0 8px 22px rgba(56, 189, 248, 0.28);
+    }
+
+    .btn-review {
+      background: linear-gradient(135deg, rgba(226, 192, 141, 0.22) 0%, rgba(180, 83, 9, 0.25) 100%);
+      color: #fef3c7;
+      border: 1px solid rgba(226, 192, 141, 0.55);
+      box-shadow: 0 6px 18px rgba(217, 119, 6, 0.16);
+    }
+    .btn-review:hover:not(:disabled) {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(226, 192, 141, 0.32) 0%, rgba(180, 83, 9, 0.35) 100%);
+    }
+
+    .btn-test {
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+      color: #ecfdf5;
+      border: 1px solid rgba(52, 211, 153, 0.55);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.22);
+    }
+    .btn-test:hover:not(:disabled) {
+      border-color: var(--emerald);
+      filter: brightness(1.08);
+    }
+
+    /* Countdown Progress Box */
+    .timer-box {
+      background: rgba(11, 16, 27, 0.55);
+      border: 1px solid var(--panel-border-subtle);
+      border-radius: 14px;
+      padding: 12px 14px;
+      text-align: center;
+    }
+
+    .timer-label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    .timer-value {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--frost), var(--gold));
+      transition: width 0.08s linear;
+    }
+
+    /* Status Banner */
+    .status-banner {
+      text-align: center;
+      font-size: 0.83rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+      background: rgba(125, 211, 252, 0.07);
+      border: 1px solid rgba(125, 211, 252, 0.2);
+      padding: 10px 12px;
+      border-radius: 12px;
+    }
+
+    .status-banner b {
+      color: var(--gold);
+    }
+
+    /* Score Display Below Buttons */
+    .score-box {
+      background: radial-gradient(circle at 50% 0%, rgba(226, 192, 141, 0.14) 0%, rgba(11, 16, 27, 0.88) 75%);
+      border: 1.5px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 16px 12px;
+      text-align: center;
+      position: relative;
+    }
+
+    .score-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--gold);
+      letter-spacing: 1.4px;
+    }
+
+    .score-number {
+      font-family: var(--font-serif);
+      font-size: 3.4rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.05;
+      margin: 4px 0;
+      text-shadow: 0 4px 20px rgba(226, 192, 141, 0.3);
+    }
+
+    .score-max {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 11, 19, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #131c2e;
+      border: 1.5px solid var(--gold);
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      padding: 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+      animation: popIn 0.25s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.94); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .modal-header h2 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      color: var(--gold);
+    }
+
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 18px;
+    }
+
+    .ref-table th, .ref-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .ref-table th {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .ref-table td {
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    .temp-val {
+      font-family: var(--font-serif);
+      color: var(--frost);
+      font-size: 1.05rem !important;
+      font-weight: 700 !important;
+      text-align: right !important;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-close-modal {
+      background: rgba(255, 255, 255, 0.08);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-auto-5s {
+      background: var(--gold);
+      color: #0b101b;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Responsive */
+    @media (max-width: 1160px) {
+      :root {
+        --card-width: 126px;
+        --card-height: 174px;
+      }
+      .control-sidebar {
+        width: 245px;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .game-container {
+        flex-direction: column;
+      }
+      .control-sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: stretch;
+      }
+      .control-buttons {
+        flex-direction: row;
+        flex: 1 1 100%;
+      }
+      .timer-box, .status-banner, .score-box {
+        flex: 1;
+      }
+      :root {
+        --card-width: 108px;
+        --card-height: 152px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand-block">
+      <div class="brand-emblem">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/>
+          <circle cx="12" cy="12" r="4"/>
+        </svg>
+      </div>
+      <div class="title-group">
+        <h1>Vui Cùng <span>Nhiệt Độ</span></h1>
+        <p>Quy tắc đối chiếu: Chất có nhiệt độ đông đặc <strong>thấp hơn</strong> thắng (+2đ) • Hòa (+1đ) • Thua (0đ)</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ref" onclick="openRefModal(false)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Bảng tra nhiệt độ
+      </button>
+      <button class="btn-ref" onclick="openRefModal(true)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Chiếu ghi nhớ (5s)
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="game-container">
+    <!-- Left Area: 3 Rows -->
+    <section class="board-area">
+
+      <!-- Row 1: Reference Random 5 Cards -->
+      <div class="board-row">
+        <div class="row-header">
+          <div class="row-title">
+            <span class="row-roman">I.</span>
+            <span>Bộ bài đối chiếu (5 chất ngẫu nhiên)</span>
+            <span class="badge-tag" id="row1Status">Đang úp bài</span>
+          </div>
+          <span class="row-hint">Ghi nhớ vị trí các chất để chọn lá khắc chế</span>
+        </div>
+        <div class="slots-grid" id="row1Grid"></div>
+      </div>
+
+      <!-- Row 2: Match Slots -->
+      <div class="board-row row-match">
+        <div class="row-header">
+          <div class="row-title">
+            <span class="row-roman">II.</span>
+            <span>Khu vực đặt bài thi đấu</span>
+            <span class="badge-tag" id="row2Count">Đã đặt: 0/5</span>
+          </div>
+          <span class="row-hint">Kéo thả từ Hàng III vào đây (hoặc chạm chọn lá bài rồi chạm ô trống)</span>
+        </div>
+        <div class="slots-grid" id="row2Grid"></div>
+      </div>
+
+      <!-- Row 3: Student Hand -->
+      <div class="board-row">
+        <div class="row-header">
+          <div class="row-title">
+            <span class="row-roman">III.</span>
+            <span>Bài trên tay (Hand)</span>
+            <span class="badge-tag">5 dung dịch</span>
+          </div>
+          <span class="row-hint">Chạm vào lá bài đã đặt ở Hàng II để thu hồi về tay</span>
+        </div>
+        <div class="slots-grid" id="row3Grid"></div>
+      </div>
+
+    </section>
+
+    <!-- Right Sidebar: 3 Control Buttons + Score Display Below -->
+    <aside class="control-sidebar">
+      <div class="control-buttons">
+        <div class="control-title">Điều Khiển Bàn Đấu</div>
+
+        <button class="ctrl-btn btn-shuffle" id="btnShuffle" onclick="handleShuffle()">
+          <span>1. Xào bài ngẫu nhiên</span>
+          <span class="btn-sub">Đảo thứ tự Hàng I & làm mới ván</span>
+        </button>
+
+        <button class="ctrl-btn btn-review" id="btnReview" onclick="handleReview5s()">
+          <span>2. Lật xem & Ẩn (5s)</span>
+          <span class="btn-sub">Mở ngửa Hàng I trong 5 giây</span>
+        </button>
+
+        <button class="ctrl-btn btn-test" id="btnTest" onclick="handleTestMatches()">
+          <span>3. Chấm điểm từng cặp</span>
+          <span class="btn-sub">Đối chiếu lần lượt cặp 1 → 5</span>
+        </button>
+      </div>
+
+      <!-- Countdown Progress -->
+      <div class="timer-box">
+        <div class="timer-label" id="timerLabel">Đồng hồ quan sát</div>
+        <div class="timer-value" id="timerValue">5.0s</div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Status Message -->
+      <div class="status-banner" id="statusBanner">
+        Bấm <b>"1. Xào bài ngẫu nhiên"</b> hoặc kéo bài từ Hàng III lên Hàng II để bắt đầu.
+      </div>
+
+      <!-- Score Display Directly Below Buttons -->
+      <div class="score-box">
+        <div class="score-title">Tổng Điểm</div>
+        <div class="score-number" id="scoreDisplay">0</div>
+        <div class="score-max">Thang điểm tối đa: 10</div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Reference Modal -->
+  <div class="modal-backdrop" id="refModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Bảng Nhiệt Độ Đông Đặc Chuẩn</h2>
+        <span id="modalCountdownBadge" style="font-weight: 700; color: var(--gold);"></span>
+      </div>
+      <table class="ref-table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Tên chất / Dung dịch</th>
+            <th style="text-align: right;">Nhiệt độ đông đặc</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01</td>
+            <td>Nước tinh khiết</td>
+            <td class="temp-val">0 °C</td>
+          </tr>
+          <tr>
+            <td>02</td>
+            <td>Sữa tươi</td>
+            <td class="temp-val">-0,5 °C</td>
+          </tr>
+          <tr>
+            <td>03</td>
+            <td>Nước biển</td>
+            <td class="temp-val">-2,0 °C</td>
+          </tr>
+          <tr>
+            <td>04</td>
+            <td>Nước muối 5%</td>
+            <td class="temp-val">-3,0 °C</td>
+          </tr>
+          <tr>
+            <td>05</td>
+            <td>Nước muối 10%</td>
+            <td class="temp-val">-6,5 °C</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="modal-footer">
+        <span style="font-size: 0.78rem; color: var(--text-muted);">Nồng độ muối càng cao, nhiệt độ đông đặc càng hạ sâu.</span>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-auto-5s" onclick="startModal5s()">Tự ẩn sau 5s</button>
+          <button class="btn-close-modal" onclick="closeRefModal()">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Bespoke minimalist geometric / botanical-laboratory fine-line SVG artworks
+    const ARTWORKS = {
+      pure: `
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="50" cy="50" r="40" stroke-opacity="0.18" stroke-dasharray="3 3"/>
+          <path d="M50 20 C50 20 31 44 31 57 A19 19 0 0 0 69 57 C69 44 50 20 50 20 Z" fill="currentColor" fill-opacity="0.08"/>
+          <path d="M43 56 A8 8 0 0 0 51 64" stroke-opacity="0.7"/>
+          <ellipse cx="50" cy="81" rx="22" ry="4.5" stroke-opacity="0.45"/>
+          <ellipse cx="50" cy="81" rx="11" ry="2" stroke-opacity="0.75"/>
+        </svg>`,
+      milk: `
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="50" cy="50" r="40" stroke-opacity="0.18" stroke-dasharray="3 3"/>
+          <path d="M38 24 H62 L66 37 V73 A5 5 0 0 1 61 78 H39 A5 5 0 0 1 34 73 V37 Z" fill="currentColor" fill-opacity="0.07"/>
+          <path d="M38 24 V19 H62 V24"/>
+          <path d="M34 52 Q42 47 50 52 T66 52" stroke-width="1.8"/>
+          <circle cx="44" cy="63" r="2.2" fill="currentColor" fill-opacity="0.35"/>
+          <circle cx="55" cy="67" r="1.5" fill="currentColor" fill-opacity="0.35"/>
+        </svg>`,
+      sea: `
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="50" cy="50" r="38" stroke-opacity="0.22"/>
+          <path d="M18 46 Q30 39 42 46 T66 46 T82 46"/>
+          <path d="M15 57 Q28 50 41 57 T67 57 T85 57" stroke-opacity="0.75"/>
+          <path d="M22 68 Q35 62 48 68 T78 68" stroke-opacity="0.45"/>
+          <polygon points="50,22 57,29 50,36 43,29" fill="currentColor" fill-opacity="0.12"/>
+        </svg>`,
+      salt5: `
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="50,16 79,33 79,67 50,84 21,67 21,33" stroke-opacity="0.35" fill="currentColor" fill-opacity="0.05"/>
+          <polygon points="50,28 69,39 69,61 50,72 31,61 31,39"/>
+          <line x1="50" y1="16" x2="50" y2="28"/>
+          <line x1="79" y1="33" x2="69" y2="39"/>
+          <line x1="79" y1="67" x2="69" y2="61"/>
+          <line x1="50" y1="84" x2="50" y2="72"/>
+          <line x1="21" y1="67" x2="31" y2="61"/>
+          <line x1="21" y1="33" x2="31" y2="39"/>
+          <circle cx="50" cy="50" r="5" fill="currentColor" fill-opacity="0.2"/>
+        </svg>`,
+      salt10: `
+        <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="50" cy="50" r="39" stroke-opacity="0.2"/>
+          <line x1="50" y1="14" x2="50" y2="86"/>
+          <line x1="19" y1="32" x2="81" y2="68"/>
+          <line x1="81" y1="32" x2="19" y2="68"/>
+          <polyline points="43,22 50,29 57,22"/>
+          <polyline points="43,78 50,71 57,78"/>
+          <polyline points="23,41 32,39 29,30"/>
+          <polyline points="77,59 68,61 71,70"/>
+          <polyline points="71,30 68,39 77,41"/>
+          <polyline points="29,70 32,61 23,59"/>
+          <polygon points="50,38 60,44 60,56 50,62 40,56 40,44" fill="currentColor" fill-opacity="0.14"/>
+        </svg>`
+    };
+
+    const CARD_BACK_SVG = `
+      <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.3">
+        <circle cx="50" cy="50" r="42" stroke-opacity="0.55"/>
+        <circle cx="50" cy="50" r="33" stroke-dasharray="2 3" stroke-opacity="0.75"/>
+        <polygon points="50,14 60,40 86,50 60,60 50,86 40,60 14,50 40,40" stroke-opacity="0.85" fill="currentColor" fill-opacity="0.06"/>
+        <polygon points="50,24 76,50 50,76 24,50" stroke-opacity="0.6"/>
+        <circle cx="50" cy="50" r="6" fill="currentColor" fill-opacity="0.25"/>
+      </svg>
+    `;
+
+    // Dữ liệu 5 chất (Nhiệt độ chỉ dùng khi chấm điểm, tuyệt đối ẩn trên mặt lá bài trước đó)
+    const SUBSTANCES = [
+      { id: 'pure',   code: 'I',   name: 'Nước tinh khiết', temp: 0.0,  theme: 'theme-pure' },
+      { id: 'milk',   code: 'II',  name: 'Sữa tươi',        temp: -0.5, theme: 'theme-milk' },
+      { id: 'sea',    code: 'III', name: 'Nước biển',       temp: -2.0, theme: 'theme-sea' },
+      { id: 'salt5',  code: 'IV',  name: 'Nước muối 5%',    temp: -3.0, theme: 'theme-salt5' },
+      { id: 'salt10', code: 'V',   name: 'Nước muối 10%',   temp: -6.5, theme: 'theme-salt10' }
+    ];
+
+    // Trạng thái ván đấu
+    let opponentCards = [];
+    let studentBoard = [null, null, null, null, null];
+    let studentHand = [];
+    let selectedHandCardId = null;
+    let isBusy = false;
+    let isTested = false;
+    let reviewInterval = null;
+    let modalTimeout = null;
+
+    function initGame() {
+      opponentCards = shuffleArray([...SUBSTANCES]);
+      studentBoard = [null, null, null, null, null];
+      studentHand = [...SUBSTANCES];
+      selectedHandCardId = null;
+      isBusy = false;
+      isTested = false;
+      updateScore(0);
+      renderAll(false, false);
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function createCardElement(substance, options = {}) {
+      const { isOpponent = false, isFaceUp = false, isDraggable = false, slotIndex = null } = options;
+
+      const card = document.createElement('div');
+      card.className = `card ${substance.theme} ${isOpponent ? 'opponent-card' : 'student-card'} ${isFaceUp ? 'flipped' : ''}`;
+      if (!isOpponent && selectedHandCardId === substance.id) {
+        card.classList.add('selected');
+      }
+
+      card.innerHTML = `
+        <div class="card-inner">
+          <div class="card-face card-back">
+            <div class="card-back-frame">
+              ${CARD_BACK_SVG}
+              <div class="card-back-label">Nhiệt Học</div>
+            </div>
+          </div>
+          <div class="card-face card-front">
+            <div class="card-front-inner">
+              <div class="card-header-meta">
+                <span>${substance.code}</span>
+                <span class="card-dot"></span>
+              </div>
+              <div class="card-art">
+                ${ARTWORKS[substance.id]}
+              </div>
+              <div class="card-title-wrap">
+                <div class="card-name">${substance.name}</div>
+                <div class="card-ornament"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      if (!isOpponent && !isBusy && !isTested) {
+        card.style.pointerEvents = 'auto';
+
+        if (isDraggable) {
+          card.setAttribute('draggable', 'true');
+
+          card.addEventListener('dragstart', (e) => {
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', JSON.stringify({
+              source: slotIndex !== null ? 'board' : 'hand',
+              id: substance.id,
+              fromSlot: slotIndex
+            }));
+            selectedHandCardId = substance.id;
+            card.style.opacity = '0.55';
+          });
+
+          card.addEventListener('dragend', () => {
+            card.style.opacity = '1';
+          });
+
+          // Touch Drag & Drop cho màn hình cảm ứng / bảng tương tác
+          let touchClone = null;
+          card.addEventListener('touchstart', (e) => {
+            if (isBusy || isTested) return;
+            const touch = e.touches[0];
+            selectedHandCardId = substance.id;
+
+            touchClone = card.cloneNode(true);
+            touchClone.style.position = 'fixed';
+            touchClone.style.width = card.offsetWidth + 'px';
+            touchClone.style.height = card.offsetHeight + 'px';
+            touchClone.style.left = (touch.clientX - card.offsetWidth / 2) + 'px';
+            touchClone.style.top = (touch.clientY - card.offsetHeight / 2) + 'px';
+            touchClone.style.opacity = '0.88';
+            touchClone.style.pointerEvents = 'none';
+            touchClone.style.zIndex = '9999';
+            document.body.appendChild(touchClone);
+          }, { passive: true });
+
+          card.addEventListener('touchmove', (e) => {
+            if (!touchClone) return;
+            e.preventDefault();
+            const touch = e.touches[0];
+            touchClone.style.left = (touch.clientX - touchClone.offsetWidth / 2) + 'px';
+            touchClone.style.top = (touch.clientY - touchClone.offsetHeight / 2) + 'px';
+
+            document.querySelectorAll('.drop-slot').forEach(s => s.classList.remove('drag-over'));
+            const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const dropSlot = elemBelow ? elemBelow.closest('.drop-slot') : null;
+            if (dropSlot) dropSlot.classList.add('drag-over');
+          }, { passive: false });
+
+          card.addEventListener('touchend', (e) => {
+            if (!touchClone) return;
+            const touch = e.changedTouches[0];
+            touchClone.remove();
+            touchClone = null;
+
+            document.querySelectorAll('.drop-slot').forEach(s => s.classList.remove('drag-over'));
+            const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            const dropSlot = elemBelow ? elemBelow.closest('.drop-slot') : null;
+
+            if (dropSlot && dropSlot.id && dropSlot.id.startsWith('r2-slot-')) {
+              const targetIdx = parseInt(dropSlot.id.replace('r2-slot-', ''), 10);
+              handleDropToSlot({
+                source: slotIndex !== null ? 'board' : 'hand',
+                id: substance.id,
+                fromSlot: slotIndex
+              }, targetIdx);
+            }
+          });
+        }
+
+        // Click / Tap chọn bài hoặc trả về Hand
+        card.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (isBusy || isTested) return;
+
+          if (slotIndex !== null) {
+            returnCardToHand(slotIndex);
+          } else {
+            selectedHandCardId = (selectedHandCardId === substance.id) ? null : substance.id;
+            renderRow3();
+            if (selectedHandCardId) {
+              setStatus(`Đã chọn <b>${substance.name}</b>. Chạm vào ô trống ở Hàng II để đặt bài.`);
+            }
+          }
+        });
+      }
+
+      return card;
+    }
+
+    function renderRow1(isFaceUp = false, animateShuffle = false) {
+      const grid = document.getElementById('row1Grid');
+      grid.innerHTML = '';
+
+      opponentCards.forEach((sub, idx) => {
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+        slot.id = `r1-slot-${idx}`;
+
+        const cardEl = createCardElement(sub, {
+          isOpponent: true,
+          isFaceUp: isFaceUp,
+          isDraggable: false
+        });
+
+        if (animateShuffle) {
+          cardEl.classList.add(idx % 2 === 0 ? 'shuffling-even' : 'shuffling-odd');
+        }
+
+        slot.appendChild(cardEl);
+        grid.appendChild(slot);
+      });
+
+      const statusBadge = document.getElementById('row1Status');
+      statusBadge.textContent = isFaceUp ? 'Đang mở bài' : 'Đang úp bài';
+    }
+
+    function renderRow2() {
+      const grid = document.getElementById('row2Grid');
+      grid.innerHTML = '';
+      let placedCount = 0;
+
+      for (let i = 0; i < 5; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'slot drop-slot';
+        slot.id = `r2-slot-${i}`;
+
+        const placedCard = studentBoard[i];
+        if (placedCard) {
+          placedCount++;
+          const cardEl = createCardElement(placedCard, {
+            isOpponent: false,
+            isFaceUp: true,
+            isDraggable: !isBusy && !isTested,
+            slotIndex: i
+          });
+          slot.appendChild(cardEl);
+        } else {
+          slot.innerHTML = `
+            <div class="slot-placeholder">
+              <span>0${i + 1}</span>
+              <small>Thả bài vào đây</small>
+            </div>
+          `;
+        }
+
+        slot.addEventListener('dragover', (e) => {
+          if (isBusy || isTested) return;
+          e.preventDefault();
+          slot.classList.add('drag-over');
+        });
+
+        slot.addEventListener('dragleave', () => {
+          slot.classList.remove('drag-over');
+        });
+
+        slot.addEventListener('drop', (e) => {
+          slot.classList.remove('drag-over');
+          if (isBusy || isTested) return;
+          e.preventDefault();
+          const raw = e.dataTransfer.getData('text/plain');
+          if (!raw) return;
+          try {
+            const payload = JSON.parse(raw);
+            handleDropToSlot(payload, i);
+          } catch (err) {}
+        });
+
+        slot.addEventListener('click', () => {
+          if (isBusy || isTested) return;
+          if (selectedHandCardId && !studentBoard[i]) {
+            handleDropToSlot({ source: 'hand', id: selectedHandCardId, fromSlot: null }, i);
+          }
+        });
+
+        grid.appendChild(slot);
+      }
+
+      document.getElementById('row2Count').textContent = `Đã đặt: ${placedCount}/5`;
+    }
+
+    function renderRow3() {
+      const grid = document.getElementById('row3Grid');
+      grid.innerHTML = '';
+
+      for (let i = 0; i < 5; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'slot hand-slot';
+
+        const cardData = studentHand[i];
+        if (cardData) {
+          const cardEl = createCardElement(cardData, {
+            isOpponent: false,
+            isFaceUp: true,
+            isDraggable: !isBusy && !isTested,
+            slotIndex: null
+          });
+          slot.appendChild(cardEl);
+        }
+
+        grid.appendChild(slot);
+      }
+    }
+
+    function renderAll(row1FaceUp = false, animateShuffle = false) {
+      renderRow1(row1FaceUp, animateShuffle);
+      renderRow2();
+      renderRow3();
+    }
+
+    function handleDropToSlot(payload, targetSlotIdx) {
+      if (payload.source === 'hand') {
+        const handIndex = studentHand.findIndex(c => c && c.id === payload.id);
+        if (handIndex === -1) return;
+
+        const movingCard = studentHand[handIndex];
+        const existingBoardCard = studentBoard[targetSlotIdx];
+
+        studentBoard[targetSlotIdx] = movingCard;
+        studentHand[handIndex] = existingBoardCard || null;
+        selectedHandCardId = null;
+      } else if (payload.source === 'board') {
+        const fromIdx = payload.fromSlot;
+        if (fromIdx === null || fromIdx === targetSlotIdx) return;
+
+        const temp = studentBoard[targetSlotIdx];
+        studentBoard[targetSlotIdx] = studentBoard[fromIdx];
+        studentBoard[fromIdx] = temp;
+        selectedHandCardId = null;
+      }
+
+      renderRow2();
+      renderRow3();
+
+      const count = studentBoard.filter(Boolean).length;
+      if (count === 5) {
+        setStatus('Đã xếp đủ <b>5/5 lá bài</b>! Bấm <b>"3. Chấm điểm từng cặp"</b> để đối chiếu.');
+      } else {
+        setStatus(`Đã xếp <b>${count}/5</b> lá bài vào khu vực thi đấu.`);
+      }
+    }
+
+    function returnCardToHand(boardSlotIdx) {
+      const cardToReturn = studentBoard[boardSlotIdx];
+      if (!cardToReturn) return;
+
+      const emptyHandIdx = studentHand.findIndex(c => c === null);
+      if (emptyHandIdx !== -1) {
+        studentHand[emptyHandIdx] = cardToReturn;
+      } else {
+        studentHand.push(cardToReturn);
+      }
+      studentBoard[boardSlotIdx] = null;
+      selectedHandCardId = null;
+
+      renderRow2();
+      renderRow3();
+      setStatus(`Đã thu hồi <b>${cardToReturn.name}</b> về bài trên tay.`);
+    }
+
+    // NÚT 1: Xào bài ngẫu nhiên
+    function handleShuffle() {
+      if (isBusy) return;
+      clearTimers();
+
+      isBusy = true;
+      isTested = false;
+      setButtonsDisabled(true);
+
+      opponentCards = shuffleArray([...SUBSTANCES]);
+      studentBoard = [null, null, null, null, null];
+      studentHand = [...SUBSTANCES];
+      selectedHandCardId = null;
+      updateScore(0);
+      resetTimerUI();
+
+      renderAll(false, true);
+      setStatus('Đang xào bài ngẫu nhiên 5 chất cho bộ bài đối chiếu...');
+
+      setTimeout(() => {
+        isBusy = false;
+        setButtonsDisabled(false);
+        renderAll(false, false);
+        setStatus('Đã tạo xong ván mới! Bấm <b>"2. Lật xem & Ẩn (5s)"</b> để quan sát hoặc xếp bài ngay.');
+      }, 800);
+    }
+
+    // NÚT 2: Lật xem 5s rồi tự ẩn
+    function handleReview5s() {
+      if (isBusy) return;
+      if (isTested) {
+        setStatus('Ván này đã chấm điểm. Hãy bấm <b>"1. Xào bài ngẫu nhiên"</b> cho lượt mới.');
+        return;
+      }
+
+      clearTimers();
+      isBusy = true;
+      selectedHandCardId = null;
+      setButtonsDisabled(true);
+
+      renderAll(true, false);
+      setStatus('<b>Ghi nhớ nhanh!</b> Các lá bài ở Hàng I sẽ tự động úp lại sau 5 giây...');
+
+      const duration = 5000;
+      const startTime = Date.now();
+      const timerValueEl = document.getElementById('timerValue');
+      const progressFillEl = document.getElementById('progressFill');
+      document.getElementById('timerLabel').textContent = 'Đang mở bài (Tự ẩn sau 5s)';
+
+      progressFillEl.style.width = '100%';
+
+      reviewInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, duration - elapsed);
+        timerValueEl.textContent = (remaining / 1000).toFixed(1) + 's';
+        progressFillEl.style.width = ((remaining / duration) * 100) + '%';
+
+        if (remaining <= 0) {
+          clearInterval(reviewInterval);
+          reviewInterval = null;
+          document.getElementById('timerLabel').textContent = 'Hết thời gian quan sát';
+          isBusy = false;
+          setButtonsDisabled(false);
+          renderAll(false, false);
+          setStatus('Đã úp bài! Hãy kéo thả 5 lá từ <b>Hàng III</b> lên <b>Hàng II</b> để đối chiếu.');
+        }
+      }, 50);
+    }
+
+    // NÚT 3: Chấm điểm tự động từng cặp 1 -> 5
+    async function handleTestMatches() {
+      if (isBusy) return;
+      if (isTested) {
+        setStatus('Lượt này đã chấm điểm xong. Bấm <b>"1. Xào bài ngẫu nhiên"</b> để chơi ván tiếp theo.');
+        return;
+      }
+
+      const placedCount = studentBoard.filter(Boolean).length;
+      if (placedCount < 5) {
+        setStatus(`Bạn mới đặt <b>${placedCount}/5</b> lá ở Hàng II. Hãy đặt đủ cả 5 lá trước khi chấm điểm!`);
+        return;
+      }
+
+      clearTimers();
+      isBusy = true;
+      selectedHandCardId = null;
+      setButtonsDisabled(true);
+      renderRow2();
+      renderRow3();
+
+      let totalScore = 0;
+      updateScore(0);
+
+      for (let i = 0; i < 5; i++) {
+        const r1Slot = document.getElementById(`r1-slot-${i}`);
+        const r2Slot = document.getElementById(`r2-slot-${i}`);
+        const r1CardEl = r1Slot.querySelector('.card');
+        const r2CardEl = r2Slot.querySelector('.card');
+
+        r1Slot.classList.add('active-testing-col');
+        r2Slot.classList.add('active-testing-col');
+
+        const oppSub = opponentCards[i];
+        const stuSub = studentBoard[i];
+
+        setStatus(`Đang đối chiếu <b>Cặp ${i + 1}</b>: ${stuSub.name} vs ${oppSub.name}...`);
+
+        r1CardEl.classList.add('flipped');
+        await sleep(500);
+
+        addTempPill(r1Slot, `${formatTemp(oppSub.temp)}`);
+        addTempPill(r2Slot, `${formatTemp(stuSub.temp)}`);
+
+        let pts = 0;
+        let label = '';
+        let badgeClass = '';
+
+        if (stuSub.temp < oppSub.temp) {
+          pts = 2;
+          label = 'THẮNG (+2đ)';
+          badgeClass = 'res-win';
+        } else if (stuSub.temp === oppSub.temp) {
+          pts = 1;
+          label = 'HÒA (+1đ)';
+          badgeClass = 'res-draw';
+        } else {
+          pts = 0;
+          label = 'THUA (0đ)';
+          badgeClass = 'res-lose';
+        }
+
+        totalScore += pts;
+        updateScore(totalScore);
+
+        const badge = document.createElement('div');
+        badge.className = `match-result-badge ${badgeClass}`;
+        badge.textContent = label;
+        r2Slot.appendChild(badge);
+        requestAnimationFrame(() => badge.classList.add('show'));
+
+        await sleep(750);
+        r1Slot.classList.remove('active-testing-col');
+        r2Slot.classList.remove('active-testing-col');
+      }
+
+      document.getElementById('row1Status').textContent = 'Đã mở toàn bộ';
+      isBusy = false;
+      isTested = true;
+      setButtonsDisabled(false);
+      setStatus(`Hoàn tất chấm điểm! Tổng điểm đạt được: <b>${totalScore}/10 điểm</b>.`);
+    }
+
+    function addTempPill(slotEl, text) {
+      const pill = document.createElement('div');
+      pill.className = 'temp-reveal-pill';
+      pill.textContent = text;
+      slotEl.appendChild(pill);
+    }
+
+    function formatTemp(val) {
+      if (val === 0) return '0 °C';
+      return val.toString().replace('.', ',') + ' °C';
+    }
+
+    function updateScore(val) {
+      document.getElementById('scoreDisplay').textContent = val;
+    }
+
+    function setStatus(html) {
+      document.getElementById('statusBanner').innerHTML = html;
+    }
+
+    function setButtonsDisabled(disabled) {
+      document.getElementById('btnShuffle').disabled = disabled;
+      document.getElementById('btnReview').disabled = disabled;
+      document.getElementById('btnTest').disabled = disabled;
+    }
+
+    function resetTimerUI() {
+      document.getElementById('timerLabel').textContent = 'Đồng hồ quan sát';
+      document.getElementById('timerValue').textContent = '5.0s';
+      document.getElementById('progressFill').style.width = '0%';
+    }
+
+    function clearTimers() {
+      if (reviewInterval) {
+        clearInterval(reviewInterval);
+        reviewInterval = null;
+      }
+      if (modalTimeout) {
+        clearTimeout(modalTimeout);
+        modalTimeout = null;
+      }
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Reference Modal Controls
+    function openRefModal(auto5s = false) {
+      const modal = document.getElementById('refModal');
+      const badge = document.getElementById('modalCountdownBadge');
+      badge.textContent = '';
+      modal.classList.add('open');
+      if (auto5s) startModal5s();
+    }
+
+    function startModal5s() {
+      if (modalTimeout) clearTimeout(modalTimeout);
+      const badge = document.getElementById('modalCountdownBadge');
+      let sec = 5;
+      badge.textContent = `Tự đóng sau ${sec}s...`;
+
+      const tick = setInterval(() => {
+        sec--;
+        if (sec > 0) {
+          badge.textContent = `Tự đóng sau ${sec}s...`;
+        } else {
+          clearInterval(tick);
+        }
+      }, 1000);
+
+      modalTimeout = setTimeout(() => {
+        closeRefModal();
+      }, 5000);
+    }
+
+    function closeRefModal() {
+      if (modalTimeout) clearTimeout(modalTimeout);
+      document.getElementById('refModal').classList.remove('open');
+    }
+
+    window.addEventListener('DOMContentLoaded', initGame);
+  </script>
+</body>
+</html>
